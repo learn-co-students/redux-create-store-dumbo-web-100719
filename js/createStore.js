@@ -1,28 +1,41 @@
-let state;
+// STORE FUNCTION CONTAINING OUR STATE, DISPATCH, AND GET STATE
+const createStore = reducer => {
+	let state;
+
+	// UPDATES STATE ==> REDUCER FUNCTION
+	const dispatch = action => {
+		state = reducer(state, action);
+		render();
+	};
+
+	// GETSTATE RETRIEVES OUR UPDATED STATE
+	const getState = () => {
+		return state;
+	};
+	// RETURNS OBJECT CONTAINING FUNCITON DEFINITIONS
+	return { dispatch, getState };
+};
 
 function reducer(state = { count: 0 }, action) {
-  switch (action.type) {
-    case 'INCREASE_COUNT':
-      return { count: state.count + 1 };
+	switch (action.type) {
+		case "INCREASE_COUNT":
+			return { count: state.count + 1 };
 
-    default:
-      return state;
-  }
-};
-
-function dispatch(action){
-  state = reducer(state, action);
-  render();
-};
+		default:
+			return state;
+	}
+}
 
 function render() {
-  let container = document.getElementById('container');
-  container.textContent = state.count;
-};
+	let container = document.getElementById("container");
+	container.textContent = store.getState().count;
+}
 
-dispatch({ type: '@@INIT' })
-let button = document.getElementById('button');
+let store = createStore(reducer);
+store.dispatch({ type: "@@INIT" });
 
-button.addEventListener('click', function() {
-    dispatch({ type: 'INCREASE_COUNT' });
-})
+let button = document.getElementById("button");
+
+button.addEventListener("click", function() {
+	store.dispatch({ type: "INCREASE_COUNT" });
+});
